@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% load widget_tweaks %}
+{% load static %}  {# For any static images #}
 
 {% block title %}Tweet{% endblock %}
 
@@ -20,10 +21,16 @@
         {# Photo field #}
         <label for="{{ form.photo.id_for_label }}" class="block font-medium text-gray-300">Photo</label>
 
-        {% if form.instance.photo_url %}
-           <img src="{{ form.instance.photo_url }}" 
-             alt="Current Photo" 
-             class="w-24 h-24 object-cover rounded-md border border-gray-600 mb-2">
+        {% if form.instance.photo %}
+           {# Use .url for ImageField to load media correctly #}
+           <img src="{{ form.instance.photo.url }}" 
+                alt="Current Photo" 
+                class="w-24 h-24 object-cover rounded-md border border-gray-600 mb-2">
+        {% else %}
+           {# Optional: default placeholder if no photo #}
+           <img src="{% static 'images/default-tweet.png' %}" 
+                alt="No photo" 
+                class="w-24 h-24 object-cover rounded-md border border-gray-600 mb-2">
         {% endif %}
 
         {{ form.photo|add_class:"block w-full text-sm text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:font-semibold file:bg-white file:text-black hover:file:bg-gray-200 cursor-pointer" }}

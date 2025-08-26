@@ -56,31 +56,34 @@
         </a>
     </div>
 
- 
+    <!-- Comments section -->
+    <div class="mb-4">
+        <h3 class="text-gray-300 font-semibold mb-3">Comments</h3>
 
-
-<!-- Comments section -->
-<div class="mb-4">
-    <h3 class="text-gray-300 font-semibold mb-3">Comments</h3>
-
-    {% for comment in comments %}
-        <div class="flex items-start gap-3 mb-3 p-3 bg-gray-800 rounded-lg border border-gray-700">
-            
-            <!-- Avatar -->
-            <img src="{% if comment.user.profile.avatar %}{{ comment.user.profile.avatar.url }}{% endif %}" 
-                 alt="{{ comment.user.username }}" 
-                 class="w-10 h-10 rounded-full object-cover border border-gray-600">
-            
-            <!-- Comment content -->
-            <div>
-                <p class="text-white font-medium">{{ comment.user.username }}</p>
-                <p class="text-gray-300 break-words">{{ comment.text }}</p>
+        {% for comment in comments %}
+            <div class="flex items-start gap-3 mb-3 p-3 bg-gray-800 rounded-lg border border-gray-700">
+                
+                <!-- Avatar -->
+                {% if comment.user.profile.avatar %}
+                    <img src="{{ comment.user.profile.avatar.url }}" 
+                         alt="{{ comment.user.username }}" 
+                         class="w-10 h-10 rounded-full object-cover border border-gray-600">
+                {% else %}
+                    <img src="{% static 'images/default-avatar.png' %}" 
+                         alt="Default Avatar" 
+                         class="w-10 h-10 rounded-full object-cover border border-gray-600">
+                {% endif %}
+                
+                <!-- Comment content -->
+                <div>
+                    <p class="text-white font-medium">{{ comment.user.username }}</p>
+                    <p class="text-gray-300 break-words">{{ comment.text }}</p>
+                </div>
             </div>
-        </div>
-    {% empty %}
-        <p class="text-gray-500 text-sm">No comments yet.</p>
-    {% endfor %}
-</div>
+        {% empty %}
+            <p class="text-gray-500 text-sm">No comments yet.</p>
+        {% endfor %}
+    </div>
 
     <!-- Add comment form -->
     <form method="POST" class="flex gap-2">

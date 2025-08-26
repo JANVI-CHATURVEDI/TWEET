@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% load widget_tweaks %}
+{% load static %}  {# Load static for any static images like placeholders #}
 
 {% block title %}Tweets{% endblock title %}
 
@@ -10,7 +11,7 @@
         <div class="bg-[#121111] border border-[#2a2a2a] rounded-xl p-4 hover:bg-[#1e1e1e] transition">
 
             {% if tweet.reposted_from %}
-                <div class="text-gray-400 text-xs mb-1 flex items-center gap-1 mb-3.5">
+                <div class="text-gray-400 text-xs  flex items-center gap-1 mb-3.5">
                     🔁 {{ tweet.user.username }} reposted from {{ tweet.reposted_from.user.username }}
                 </div>
             {% endif %}
@@ -22,9 +23,10 @@
                          alt="{{ tweet.user.username }}'s avatar"
                          class="w-12 h-12 rounded-full object-cover flex-shrink-0 border border-[#333]">
                 {% else %}
-                    <div class="w-12 h-12 rounded-full bg-gray-700 flex-shrink-0 flex items-center justify-center text-white font-bold">
-                        {{ tweet.user.username|slice:":1" }}
-                    </div>
+                    {# Use a default static avatar if user has none #}
+                    <img src="{% static 'images/default-avatar.png' %}" 
+                         alt="Default avatar"
+                         class="w-12 h-12 rounded-full object-cover flex-shrink-0 border border-[#333]">
                 {% endif %}
 
                 <div class="flex-1 min-w-0">
@@ -47,15 +49,15 @@
                     {% endif %}
 
                     <!-- Tweet image -->
-                    {% if tweet.photo_url %}
-                        <img src="{{ tweet.photo_url }}" 
+                    {% if tweet.photo %}
+                        <img src="{{ tweet.photo.url }}" 
                              alt="Tweet photo" 
                              class="mt-3 rounded-lg max-w-full max-h-96 object-cover border border-[#333]">
                     {% endif %}
 
                     <!-- Actions: Likes / Reposts / Comment icon -->
                     <div class="flex items-center gap-6 mt-3 pt-3 border-t border-[#333] text-gray-500 text-sm">
-                        <!-- Like button (inline) -->
+                        <!-- Like button -->
                         <form method="POST" action="{% url 'like_tweet' tweet.pk %}">
                             {% csrf_token %}
                             <button type="submit" class="flex items-center gap-1 hover:text-red-500">
@@ -63,7 +65,7 @@
                             </button>
                         </form>
 
-                        <!-- Repost button (inline) -->
+                        <!-- Repost button -->
                         <form method="POST" action="{% url 'repost_tweet' tweet.pk %}">
                             {% csrf_token %}
                             <button type="submit" class="flex items-center gap-1 hover:text-green-400">
@@ -71,7 +73,7 @@
                             </button>
                         </form>
 
-                        <!-- Comment icon: leads to detail page -->
+                        <!-- Comment icon -->
                         <a href="{% url 'tweet_detail' tweet.pk %}#comments" class="flex items-center gap-1 hover:text-blue-400">
                             💬 <span>{{ tweet.comments.count }}</span>
                         </a>

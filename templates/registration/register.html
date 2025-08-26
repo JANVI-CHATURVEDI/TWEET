@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% load widget_tweaks %}
+{% load static %}
 
 {% block content %}
 <div class="max-w-sm mx-auto mt-10 p-6 bg-black rounded-xl shadow-lg border border-neutral-800">
@@ -14,8 +15,8 @@
             {% if field.name == "avatar" %}
             <div class="flex items-center gap-3">
                 <!-- Avatar preview -->
-                <img id="avatarPreview" src=""
-                     class="hidden w-12 h-12 rounded-full object-cover border border-neutral-700"
+                <img id="avatarPreview" src="{% static 'default-avatar.png' %}" 
+                     class="w-12 h-12 rounded-full object-cover border border-neutral-700"
                      alt="Preview">
 
                 <!-- File input -->
@@ -53,10 +54,8 @@
             const file = event.target.files[0];
             if (file) {
                 avatarPreview.src = URL.createObjectURL(file);
-                avatarPreview.classList.remove('hidden');
             } else {
-                avatarPreview.src = "";
-                avatarPreview.classList.add('hidden');
+                avatarPreview.src = "{% static 'default-avatar.png' %}";
             }
         });
     }
