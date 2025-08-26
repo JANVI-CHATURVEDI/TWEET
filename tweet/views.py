@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Tweet , Comment, Like
+from .models import Tweet , Like
 from .forms import TweetForm
 from django.shortcuts import get_object_or_404 , redirect
 from django.contrib.auth.decorators import login_required
@@ -136,7 +136,12 @@ def register(request):
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST, request.FILES)
         if form.is_valid():
-            user = form.save()   # <-- don't use commit=False
+            user = form.save()   # Save the user
+            # Save avatar to Profile
+            if 'avatar' in request.FILES:
+                profile = user.profile  # assumes Profile exists
+                profile.avatar = request.FILES['avatar']
+                profile.save()
             login(request, user)
             return redirect('tweet_list')
     else:
