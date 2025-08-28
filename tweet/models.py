@@ -15,7 +15,7 @@ class Tweet(models.Model):
     photo = CloudinaryField('photo', blank=True, null=True)  # <--- change here
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    reposted_from = models.ForeignKey(
+    reposted_from = models.ForeignKey(         # used for retweets or replies.
         'self',
         on_delete=models.SET_NULL,
         null=True,

@@ -2,6 +2,7 @@ from decouple import config
 import cloudinary
 import os
 from pathlib import Path
+import dj_database_url
  # <-- added
 
 # BASE_DIR for project root
@@ -68,10 +69,18 @@ WSGI_APPLICATION = 'project1.wsgi.application'
 
 # Database
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
+
+    'default': dj_database_url.config(
+        default=config(
+            'DATABASE_URL',
+            default='postgresql://my_tweets_db_user:xRkLRENQ60lELMGXrQoKBuRct3D0vHKb@dpg-d2o7d8uuk2gs73ajb450-a.oregon-postgres.render.com/my_tweets_db'
+        )
+    )
+
 }
 
 # Password validation
