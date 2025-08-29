@@ -99,7 +99,7 @@ USE_TZ = True
 
 # Static files (CSS, JS)
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]  # dev files
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'project1', 'static')]  # dev files
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')    # collectstatic target
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
