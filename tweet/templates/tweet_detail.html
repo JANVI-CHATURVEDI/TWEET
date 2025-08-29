@@ -9,7 +9,18 @@
 
     <!-- Tweet header -->
     <div class="flex justify-between items-center mb-4">
-        <div>
+        <div class="flex  gap-3 items-center">
+            <!-- Avatar -->
+            {% if tweet.user.profile.avatar %}
+                    <img src="{{ tweet.user.profile.avatar.url }}" 
+                         alt="{{ tweet.user.username }}'s avatar"
+                         class="w-12 h-12 rounded-full object-cover flex-shrink-0 border border-[#333]">
+            {% else %}
+                    <img src="{% static 'images/pfp-default.jfif' %}" 
+                         alt="Default avatar"
+                         class="w-12 h-12 rounded-full object-cover flex-shrink-0 border border-[#333]">
+            {% endif %}
+
             <p class="text-white font-semibold">{{ tweet.user.username }}</p>
             <p class="text-gray-400 text-sm">{{ tweet.created_at|date:"M d, Y H:i" }}</p>
         </div>
@@ -97,7 +108,7 @@
 
     <!-- Back button -->
     <a href="{% url 'tweet_list' %}" 
-       class="block mt-6 py-2 px-4 bg-white text-black text-center rounded-lg hover:bg-gray-700 transition">
+       class="block mt-6 py-2 px-4 bg-white text-black text-center rounded-lg  transition">
         ← Back to List
     </a>
 </div>
