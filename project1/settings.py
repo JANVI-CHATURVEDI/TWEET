@@ -74,12 +74,24 @@ DATABASES = {
     #     'NAME': BASE_DIR / 'db.sqlite3',
     # }
 
-    'default': dj_database_url.config(
-        default=config(
-            'DATABASE_URL',
-            default='postgresql://my_tweets_db_user:xRkLRENQ60lELMGXrQoKBuRct3D0vHKb@dpg-d2o7d8uuk2gs73ajb450-a.oregon-postgres.render.com/my_tweets_db'
-        )
-    )
+    # 'default': dj_database_url.config(
+    #     default=config(
+    #         'DATABASE_URL',
+    #         default='postgresql://my_tweets_db_user:xRkLRENQ60lELMGXrQoKBuRct3D0vHKb@dpg-d2o7d8uuk2gs73ajb450-a.oregon-postgres.render.com/my_tweets_db'
+    #     )
+    # )
+
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT', cast=int),
+        'OPTIONS': {
+            'sslmode': 'require',
+        },
+    }
 
 }
 
