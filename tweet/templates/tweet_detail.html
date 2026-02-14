@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% load tweet_tags %}
 {% load widget_tweaks %}
 {% load static %}
 
@@ -44,7 +45,7 @@
     </div>
 
     <!-- Tweet content -->
-    <p class="text-gray-200 mb-4 text-lg break-words">{{ tweet.text }}</p>
+    <p class="text-gray-200 mb-4 text-lg break-words">{{ tweet.text|render_hashtags|safe }}</p>
 
     {% if tweet.photo %}
         <img src="{{ tweet.photo.url }}" 
@@ -56,15 +57,40 @@
     <div class="flex items-center gap-8 mb-6">
         <form method="POST" action="{% url 'like_tweet' tweet.pk %}">
             {% csrf_token %}
-            <button type="submit" class="flex items-center gap-2 text-gray-300 hover:text-white transition">
-                👍 <span>{{ tweet.likes.count }}</span>
+            <button type="submit" class="flex items-center gap-1 hover:text-red-500 transition group">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     class="w-5 h-5 group-hover:scale-110 transition"
+                     fill="none"
+                     viewBox="0 0 24 24"
+                     stroke="currentColor">
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 20.364 4.318 12.682a4.5 4.5 0 010-6.364z"/>
+                </svg>
+                <span>{{ tweet.likes.count }}</span>
             </button>
+                            
         </form>
 
-        <a href="{% url 'repost_tweet' tweet.pk %}" 
-           class="flex items-center gap-2 text-gray-300 hover:text-white transition">
-            🔁 <span>{{ tweet.reposts.count }}</span>
-        </a>
+        <!-- Repost button -->
+        <form method="POST" action="{% url 'repost_tweet' tweet.pk %}">
+            {% csrf_token %}
+            <button type="submit" class="flex items-center gap-1 hover:text-green-400 transition group">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     class="w-5 h-5 group-hover:scale-110 transition"
+                     fill="none"
+                     viewBox="0 0 24 24"
+                     stroke="currentColor">
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M4 4v6h6M20 20v-6h-6"/>
+                </svg>
+                <span>{{ tweet.reposts.count }}</span>
+            </button>
+            
+        </form>
     </div>
 
     <!-- Comments section -->

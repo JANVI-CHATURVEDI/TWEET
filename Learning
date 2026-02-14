@@ -1,0 +1,16 @@
+To add Tags Fn
+
+- models.py 
+    - have tag class
+    - Update Tweet model , Add tags field
+        - related_name="tweets_tag_set" allows tag.tweets_tag_set.all() to get all tweets with a tag.
+    - In tweet model we have a save fun for tags to save them 
+
+- admin.py
+    - add tag class from model to admin
+
+- make a file of custom tag filter (tweet_tags.py)
+- in html we Load the filter in your template and use {{ tweet.text|truncatewords:35|render_hashtags|safe }}   , here render_hashtags is the filter we made that make tags in text clickable and blue   
+
+- Make a view for tag in views.py And URL in urls.py
+

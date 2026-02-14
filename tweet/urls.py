@@ -7,12 +7,15 @@ urlpatterns = [
    
     
     path('', views.tweet_list, name='tweet_list'),
+    path('profile/edit/', views.edit_profile, name='edit_profile'),
+    path('profile/<str:username>/', views.profile_view, name='profile'),
     path('tweet_create/', views.tweet_create, name='tweet_create'),
     path('<int:tweet_id>/edit/', views.tweet_edit, name='tweet_edit'),
     path('<int:tweet_id>/delete/', views.tweet_delete, name='tweet_delete'),
     path('<int:pk>/', views.tweet_detail, name='tweet_detail'),
     path('<int:pk>/like/', views.like_tweet, name='like_tweet'),
     path('<int:pk>/repost/', views.repost_tweet, name='repost_tweet'),
+    path('tag/<str:tag_name>/', views.tagged_tweets, name='tagged_tweets'),
     path('register/', views.register, name='register'),
 ]
 

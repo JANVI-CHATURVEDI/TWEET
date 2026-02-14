@@ -13,7 +13,9 @@ class TweetForm(forms.ModelForm):
                 'placeholder': 'What’s happening?',
                 'class': 'w-full px-3 py-2 rounded-lg bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2'
             }),
+        
         }
+
 
 class UserRegistrationForm(UserCreationForm):
     email = forms.EmailField()
@@ -45,3 +47,9 @@ class CommentForm(forms.ModelForm):
                 'class': 'w-full px-3 py-2 rounded-lg bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2'
             }),
         }
+
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['avatar', 'bio', 'location', 'website']

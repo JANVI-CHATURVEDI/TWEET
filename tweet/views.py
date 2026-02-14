@@ -1,14 +1,39 @@
 from django.shortcuts import render
-from .models import Tweet , Like
-from .forms import TweetForm
+from .models import Tweet , Like , Tag
+from .forms import TweetForm , ProfileForm 
 from django.shortcuts import get_object_or_404 , redirect
 from django.contrib.auth.decorators import login_required
 from .forms import UserRegistrationForm ,TweetForm, CommentForm
 from django.contrib.auth import login
 from django.db.models import Case, When, Value, IntegerField
+from django.contrib.auth.models import User
 
 # Note:
 # request.user has currently logged-in user.
+
+
+def profile_view(request, username):
+    user = get_object_or_404(User, username=username)
+    tweets = user.tweet_set.all().order_by('-created_at')
+
+    return render(request, 'profile.html', {
+        'profile_user': user,
+        'tweets': tweets
+    })
+
+@login_required
+def edit_profile(request):
+    profile = request.user.profile
+
+    if request.method == "POST":
+        form = ProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('profile', username=request.user.username)
+    else:
+        form = ProfileForm(instance=profile)
+
+    return render(request, 'edit_profile.html', {'form': form})    
 
 def index(request):
     return render(request, 'index.html')
@@ -131,6 +156,11 @@ def repost_tweet(request, pk):
     next_url = request.META.get('HTTP_REFERER', '/')
     return redirect(next_url)
 
+def tagged_tweets(request, tag_name):
+    tag = get_object_or_404(Tag, name=tag_name.lower())
+    tweets_tagged = tag.tweets_tag_set.all()
+    return render(request, 'tagged_tweets.html', {'tweets_tagged': tweets_tagged, 'tag': tag})
+
 
 def register(request):
     if request.method == 'POST':
@@ -139,7 +169,8 @@ def register(request):
             user = form.save()   # Save the user
             # Save avatar to Profile
             if 'avatar' in request.FILES:
-                profile = user.profile  # assumes Profile exists
+                profile = user.profile  # assumes Profile exists or it will give error . In our case Profile is ensured to exist via get_or_create in UserRegistrationForm.save()
+                # confused about how it is connected to Profile model see below
                 profile.avatar = request.FILES['avatar']
                 profile.save()
             login(request, user)
@@ -148,3 +179,33 @@ def register(request):
         form = UserRegistrationForm()
         
     return render(request, 'registration/register.html', {'form': form})
+
+
+
+
+
+
+
+
+
+
+
+
+
+## confused about how it is connected to Profile model see below
+
+# Your model class is Profile (capital P).
+# In Profile, you have:
+# user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+
+# Django automatically creates a reverse link from User → Profile.
+# By default, the reverse link is the lowercase model name → user.profile.
+
+# That’s why you can do:
+# profile = user.profile  # gives the Profile object for that user
+
+
+# If you want a custom name, you can use related_name in the field of user.
+# ✅ Easy rule: Class name lowercase = default reverse accessor.
+# No magic—just Django’s ORM doing the lookup for you.

@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+{% load widget_tweaks %}
+{% load static %}  {# For any static images #}
+
+{% block title %}Tweet{% endblock %}
+
+{% block content %}
+
+
+<div class="max-w-xl mx-auto mt-8 bg-gray-800 p-6 rounded-xl">
+
+    <h2 class="text-xl font-bold text-white mb-4">
+        Edit Profile
+    </h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+    <div class="mb-4">
+        <label class="text-gray-300 block mb-2">Current Avatar</label>
+
+        {% if request.user.profile.avatar %}
+            <img src="{{ request.user.profile.avatar.url }}"
+                 class="w-32 h-32 rounded-full object-cover border border-gray-600">
+        {% else %}
+            <img src="{% static 'default.png' %}"
+                 class="w-32 h-32 rounded-full object-cover border border-gray-600">
+        {% endif %}
+    </div>    
+
+        <div class="mb-4">
+            <label class="text-gray-300">Avatar</label>
+            <input type="file" name="avatar"
+            class="block w-full text-sm text-gray-300
+              file:mr-4 file:py-2 file:px-4
+              file:rounded file:border-0
+              file:text-sm file:font-semibold
+              file:bg-blue-600 file:text-white
+              hover:file:bg-blue-700">
+        </div>
+
+        <div class="mb-4">
+            <label class="text-gray-300">Bio</label>
+            {{ form.bio|add_class:"w-full p-2 rounded bg-gray-700 text-white" }}
+        </div>
+
+        <div class="mb-4">
+            <label class="text-gray-300">Location</label>
+            {{ form.location|add_class:"w-full p-2 rounded bg-gray-700 text-white" }}
+        </div>
+
+        <div class="mb-4">
+            <label class="text-gray-300">Website</label>
+            {{ form.website|add_class:"w-full p-2 rounded bg-gray-700 text-white" }}
+        </div>
+
+        <button type="submit"
+            class="bg-blue-600 px-4 py-2 rounded text-white hover:bg-blue-700">
+            Save Changes
+        </button>
+
+    </form>
+
+</div>
+
+{% endblock %}

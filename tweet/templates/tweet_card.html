@@ -1,0 +1,142 @@
+{% load static %}
+{% load tweet_tags %}
+
+<div class="relative bg-[#121111] border border-[#2a2a2a] rounded-xl p-4 hover:bg-[#1e1e1e] transition">
+    <a href="{% url 'tweet_detail' tweet.id %}"
+    class="absolute inset-0 z-0"></a>
+            {% if tweet.reposted_from %}
+                <div class="text-gray-400 text-xs  flex items-center gap-1 mb-3.5">
+                    🔁 {{ tweet.user.username }} reposted from {{ tweet.reposted_from.user.username }}
+                </div>
+            {% endif %}
+
+            <div class="flex items-start gap-3">
+
+                <div class = "relative z-10 flex-shrink-0">
+                    <a href="{% url 'profile' tweet.user.username %}">
+                    <!-- Profile avatar -->
+                    {% if tweet.user.profile.avatar %}
+                        <img src="{{ tweet.user.profile.avatar.url }}" 
+                             alt="{{ tweet.user.username }}'s avatar"
+                             class="w-12 h-12 rounded-full object-cover flex-shrink-0 border border-[#333]">
+                    {% else %}
+                        {# Use a default static avatar if user has none #}
+                        <img src="{% static 'images/default-avatar.png' %}" 
+                             alt="Default avatar"
+                             class="w-12 h-12 rounded-full object-cover flex-shrink-0 border border-[#333]">
+                    {% endif %}
+                    </a>
+                </div>     
+                <div class="relative z-10 flex-1 min-w-0">
+                    <!-- Username + date -->
+                    <div class="flex items-center gap-2 text-sm flex-wrap">
+                        <span class="font-semibold text-white mt-3"><a href="{% url 'profile' tweet.user.username %}">
+                                   {{ tweet.user.username }}
+                        </a></span>
+                        <span class="text-gray-500 mt-3">· {{ tweet.created_at|date:"M d, Y H:i" }}</span>
+                    </div>
+
+                    <!-- Tweet text -->
+                    {% if tweet.text|wordcount > 15 %}
+                        <p class="text-gray-300 mt-1 leading-snug break-words">
+                            {{ tweet.text|truncatewords:45|render_hashtags|safe }}
+                            {% if tweet.text|wordcount > 45 %}
+                            <a href="{% url 'tweet_detail' tweet.id %}" class="text-blue-200 hover:underline">...Show more</a>
+                            {% endif %}
+                        </p>
+                    {% else %}
+                        <p class="text-gray-300 mt-1 leading-snug break-words">
+                            {{ tweet.text|render_hashtags|safe }}
+                        </p>
+                    {% endif %}                    
+
+                    
+
+                    <!-- Tweet image -->
+                    {% if tweet.photo %}
+                        <img src="{{ tweet.photo.url }}" 
+                             alt="Tweet photo" 
+                             class="mt-3 rounded-lg max-w-full max-h-96 object-cover border border-[#333]">
+                    {% endif %}
+
+
+                    <!-- Actions: Likes / Reposts / Comment icon -->
+                    <div class="relative z-10 flex items-center gap-6 mt-3 pt-3 border-t border-[#333] text-gray-500 text-sm">
+                        <!-- Like button -->
+                        <form method="POST" action="{% url 'like_tweet' tweet.pk %}">
+                            {% csrf_token %}
+                            <button type="submit" class="flex items-center gap-1 hover:text-red-500 transition group">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                     class="w-5 h-5 group-hover:scale-110 transition"
+                                     fill="none"
+                                     viewBox="0 0 24 24"
+                                     stroke="currentColor">
+                                    <path stroke-linecap="round"
+                                          stroke-linejoin="round"
+                                          stroke-width="2"
+                                          d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 20.364 4.318 12.682a4.5 4.5 0 010-6.364z"/>
+                                </svg>
+                                <span>{{ tweet.likes.count }}</span>
+                            </button>
+                            
+                        </form>
+
+                        <!-- Repost button -->
+                        <form method="POST" action="{% url 'repost_tweet' tweet.pk %}">
+                            {% csrf_token %}
+                            <button type="submit" class="flex items-center gap-1 hover:text-green-400 transition group">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                     class="w-5 h-5 group-hover:scale-110 transition"
+                                     fill="none"
+                                     viewBox="0 0 24 24"
+                                     stroke="currentColor">
+                                    <path stroke-linecap="round"
+                                          stroke-linejoin="round"
+                                          stroke-width="2"
+                                          d="M4 4v6h6M20 20v-6h-6"/>
+                                </svg>
+                                <span>{{ tweet.reposts.count }}</span>
+                            </button>
+                            
+                        </form>
+
+                        <!-- Comment icon -->
+                        <a href="{% url 'tweet_detail' tweet.pk %}#comments"
+                           class="flex items-center gap-1 hover:text-blue-400 transition group">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 class="w-5 h-5 group-hover:scale-110 transition"
+                                 fill="none"
+                                 viewBox="0 0 24 24"
+                                 stroke="currentColor">
+                                <path stroke-linecap="round"
+                                      stroke-linejoin="round"
+                                      stroke-width="2"
+                                      d="M8 10h8M8 14h5m-9 5l4-4h10a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2v10z"/>
+                            </svg>
+                            <span>{{ tweet.comments.count }}</span>
+                        </a>
+                        
+
+                        {% if tweet.user == user %}
+                            <a href="{% url 'tweet_delete' tweet.id %}"
+                               class="flex items-center gap-1 hover:text-red-500 transition group">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                     class="w-5 h-5 group-hover:scale-110 transition"
+                                     fill="none"
+                                     viewBox="0 0 24 24"
+                                     stroke="currentColor">
+                                    <path stroke-linecap="round"
+                                          stroke-linejoin="round"
+                                          stroke-width="2"
+                                          d="M6 18L18 6M6 6l12 12"/>
+                                </svg>
+                                Delete
+                            </a>
+
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+       
+</div>
+  

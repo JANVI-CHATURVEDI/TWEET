@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+{% load tweet_tags %}
+
+{% block content %}
+
+<div class="max-w-2xl mx-auto mt-6">
+
+    <!-- Profile Header -->
+    <div class="bg-black p-6 rounded-xl">
+      
+        <!-- Avatar -->
+        {% if profile_user.profile.avatar %}
+            <img src="{{ profile_user.profile.avatar.url }}" 
+                 class="w-28 h-28 rounded-full border-4 border-gray-600">
+        {% endif %}
+      
+      <div class = "justify-between flex items-center">  
+        <!-- Username -->
+        <h2 class="text-xl font-bold mt-3 text-white">
+            {{ profile_user.username }}
+        </h2>
+
+        {% if request.user == profile_user %}
+            <a href="{% url 'edit_profile' %}"
+               class="bg-gray-700 px-3 py-1 rounded hover:bg-gray-600 text-white">
+               Edit Profile
+            </a>
+        {% endif %}
+      </div>  
+        
+
+        <!-- Bio -->
+        <p class="text-gray-400 mt-2">
+            {{ profile_user.profile.bio }}
+        </p>
+
+        <!-- Location -->
+        {% if profile_user.profile.location %}
+            <p class="text-gray-500 text-sm mt-1">
+                📍 {{ profile_user.profile.location }}
+            </p>
+        {% endif %}
+
+        <!-- Website -->
+        {% if profile_user.profile.website %}
+            🔗
+            <a href="{{ profile_user.profile.website }}" 
+               class="text-blue-400 hover:underline">
+             {{ profile_user.profile.website }}
+            </a>
+        {% endif %}
+
+    </div>
+
+    <!-- Tweets Section -->
+    <div class="mt-6 space-y-4">
+        {% for tweet in tweets %}
+            {% include "tweet_card.html" %}
+        {% empty %}
+            <p class="text-gray-500">No tweets yet.</p>
+        {% endfor %}
+    </div>
+
+</div>
+
+{% endblock %}

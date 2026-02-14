@@ -11,7 +11,7 @@ NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
 
 # Security
 SECRET_KEY = config('DJANGO_SECRET_KEY')  # get from env
-DEBUG = config('DEBUG', default=False, cast=bool)  # default False for safety
+DEBUG = True  # Set to False in production
 
 ALLOWED_HOSTS = ['tweet-hveo.onrender.com', '.onrender.com', 'localhost', '127.0.0.1']
 

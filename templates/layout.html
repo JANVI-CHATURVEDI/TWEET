@@ -11,37 +11,45 @@
 
 <!-- MOBILE NAVBAR -->
 <header class="lg:hidden bg-black p-4 flex justify-between items-center border-b border-gray-800">
-    <h1 class="text-xl font-bold tracking-wide">TWEETS</h1>
+    <h1 class="text-xl font-bold tracking-wide">TWEET</h1>
     <button id="menu-toggle" class="text-white text-2xl">&#9776;</button>
 </header>
 
 <!-- MOBILE MENU -->
-<div id="mobile-menu" class="lg:hidden hidden bg-black p-4 space-y-4 border-b border-gray-800">
-    <nav class="space-y-2">
+<div id="overlay"
+    class="fixed inset-0 bg-black bg-opacity-50 hidden z-30"></div>
+<div id="mobile-menu"
+     class="fixed top-0 left-0 h-full w-[75vw] max-w-xs bg-black p-4 space-y-4 
+            border-r border-gray-800 transform -translate-x-full 
+            transition-transform duration-300 ease-in-out z-50">
+
+    <nav class="space-y-2 z-100">
+
+        <h1 class="text-xl font-bold tracking-wide mt-4">TWEET</h1>
         <a href="{% url 'tweet_list' %}" 
-           class="block px-3 py-2 rounded bg-white text-black font-medium hover:bg-gray-200 transition text-center">
+           class="block px-3 py-2 rounded bg-white text-black font-medium hover:bg-gray-200 transition text-center z-50 mt-4">
            Home
         </a>
 
         <a href="{% url 'tweet_create' %}" 
-           class="block px-4 py-2 bg-white text-black text-center rounded font-semibold hover:bg-gray-200 transition">
+           class="block px-4 py-2 bg-white text-black text-center rounded font-semibold hover:bg-gray-200 transition z-50">
            Create Tweet
         </a>
 
         {% if user.is_authenticated %}
             <form method="post" action="{% url 'logout' %}">
                 {% csrf_token %}
-                <button class="w-full px-3 py-2 rounded text-center bg-[#fefbfb] text-black font-bold border border-gray-600 hover:bg-gray-300 transition">
+                <button class="w-full px-3 py-2 rounded text-center bg-[#fefbfb] text-black font-bold border border-gray-600 hover:bg-gray-300 transition z-100">
                     Logout
                 </button>
             </form>
         {% else %}
             <a href="{% url 'login' %}" 
-               class="block px-3 py-2 rounded bg-[#fefbfb] text-black font-bold  hover:bg-gray-300 transition border border-gray-600 text-center">
+               class="block px-3 py-2 rounded bg-[#fefbfb] text-black font-bold  hover:bg-gray-300 transition border border-gray-600 text-center z-100">
                Login
             </a>
             <a href="{% url 'register' %}" 
-               class="block px-3 py-2 rounded bg-[#fefbfb] text-black font-bold  hover:bg-gray-300 transition border border-gray-600 text-center">
+               class="block px-3 py-2 rounded bg-[#fefbfb] text-black font-bold  hover:bg-gray-300 transition border border-gray-600 text-center z-100">
                Register
             </a>
         {% endif %}
@@ -51,7 +59,7 @@
         <input type="text" name="q" placeholder="Search users..." value="{{ search_query }}" 
                class="flex-1 px-3 py-2 rounded bg-gray-900 border border-gray-700 text-white focus:outline-none">
         <button type="submit" 
-                class="px-3 py-2 bg-white text-black rounded font-semibold hover:bg-gray-200">
+                class="px-3 py-2 bg-white text-black rounded font-semibold hover:bg-gray-200 z-100">
             Search
         </button>
     </form>
@@ -90,6 +98,23 @@
                    Register
                 </a>
             {% endif %}
+
+            {% if user.is_authenticated %}
+            <a href="{% url 'profile' user.username %}" 
+               class="flex items-center gap-3 p-2 border border-gray-700 rounded hover:bg-gray-800             transition mb-4">
+
+                <img src="{% if user.profile.avatar %}{{ user.profile.avatar.url }}{% else %}{% static             'images/default-photo.jfif' %}{% endif %}" 
+                     alt="Profile" 
+                     class="w-12 h-12 rounded-full object-cover border border-gray-600">
+
+                <div>
+                    <p class="text-white font-bold">{{ user.username }}</p>
+                    <p class="text-gray-400 text-sm">@{{ user.username }}</p>
+                </div>
+            </a>
+            {% endif %}
+            
+            
         </nav>
         
     </aside>
@@ -118,12 +143,23 @@
 </div>
 
 <script>
-  const menuToggle = document.getElementById("menu-toggle");
-  const mobileMenu = document.getElementById("mobile-menu");
-  menuToggle.addEventListener("click", () => {
-      mobileMenu.classList.toggle("hidden");
-  });
+const menu = document.getElementById("mobile-menu");
+const overlay = document.getElementById("overlay");
+const toggleBtn = document.getElementById("menu-toggle");
+
+toggleBtn.addEventListener("click", () => {
+    menu.classList.toggle("-translate-x-full");
+    overlay.classList.toggle("hidden");
+});
+
+overlay.addEventListener("click", () => {
+    menu.classList.add("-translate-x-full");
+    overlay.classList.add("hidden");
+});
 </script>
+
+
+{% block extra_js %}{% endblock %}
 
 </body>
 </html>
