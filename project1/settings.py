@@ -14,7 +14,9 @@ SECRET_KEY = config('DJANGO_SECRET_KEY')  # get from env
 DEBUG = True  # Set to False in production
 
 ALLOWED_HOSTS = ['tweet-hveo.onrender.com', '.onrender.com', 'localhost', '127.0.0.1' , 'janvi-tweet.up.railway.app']
-
+CSRF_TRUSTED_ORIGINS = [
+    "https://janvi-tweet.up.railway.app",
+]
 # Applications
 INSTALLED_APPS = [
     'django.contrib.admin',
