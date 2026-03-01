@@ -13,7 +13,7 @@ NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
 SECRET_KEY = config('DJANGO_SECRET_KEY')  # get from env
 DEBUG = True  # Set to False in production
 
-ALLOWED_HOSTS = ['tweet-hveo.onrender.com', '.onrender.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['tweet-hveo.onrender.com', '.onrender.com', 'localhost', '127.0.0.1' , 'janvi-tweet.up.railway.app']
 
 # Applications
 INSTALLED_APPS = [
